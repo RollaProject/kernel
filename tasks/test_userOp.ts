@@ -58,7 +58,7 @@ task("test-userop", "test userop")
       const addr = await signer.getAddress();
       console.log("signer address: ", addr);
       const entrypoint = await hre.ethers.getContractAt("EntryPoint", "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789");
-      const ecdsaFactory = await hre.ethers.getContractAt("ECDSAKernelFactory", "0x08e627ca6a0593c807091726a7fbb2887a1cb556");
+      const ecdsaFactory = await hre.ethers.getContractAt("ECDSAKernelFactory", "0x6b337f4ddb17b4ba93bcde99661ab46aec1d2823");
       const account = await ecdsaFactory.getAccountAddress(addr, kernel_id);
       //await ecdsaFactory.createAccount(addr, kernel_id);
       const kernel = await hre.ethers.getContractAt("Kernel", account);
