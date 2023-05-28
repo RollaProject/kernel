@@ -2,7 +2,7 @@
 import { task } from "hardhat/config"
 import { hexConcat, arrayify, hexZeroPad } from "ethers/lib/utils"
 
-const STACKUP = "https://api.stackup.sh/v1/node/65bdd496f420d5610b504691af2787cda9a580cd2be7d3fb64a78fc17bc65c42"
+const STACKUP = "https://api.stackup.sh/v1/node/<STACKUP_API>"
 
 task("test-userop-initcode", "deploy erc20 paymaster")
     .setAction(async (taskArgs, hre) => {
