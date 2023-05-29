@@ -53,7 +53,7 @@ contract ERC165SessionKeyValidator is IKernelValidator {
             return SIG_VALIDATION_FAILED;
         }
         require(bytes4(_userOp.callData[0:4]) == sessionKey.selector, "not supported selector");
-        address token = address(bytes20(_userOp.callData[sessionKey.addressOffset:sessionKey.addressOffset + 20]));
+        address token = address(bytes20(_userOp.callData[sessionKey.addressOffset:sessionKey.addressOffset+20]));
         require(IERC165(token).supportsInterface(sessionKey.interfaceId), "does not support interface");
         return packValidationData(sessionKey.validAfter, sessionKey.validUntil);
     }
