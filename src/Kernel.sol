@@ -207,7 +207,7 @@ contract Kernel is EIP712, Compatibility, KernelStorage {
             validator.enable(enableData);
         }
     }
-
+    
     /// @notice Checks if a signature is valid
     /// @dev This function checks if a signature is valid based on the hash of the data signed.
     /// @param hash The hash of the data that was signed
