@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 import "src/factory/KernelFactory.sol";
 import "account-abstraction/interfaces/IStakeManager.sol";
 import "forge-std/Script.sol";
-import "forge-std/console.sol";
 contract DeployKernel is Script {
     address constant DEPLOYER = 0x9775137314fE595c943712B0b336327dfa80aE8A;
     address constant ENTRYPOINT_0_6 = 0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789;

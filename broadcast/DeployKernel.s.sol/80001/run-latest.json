@@ -6,7 +6,9 @@
       "contractName": "KernelFactory",
       "contractAddress": "0x5de4839a76cf55d0c90e2061ef4386d962E15ae3",
       "function": null,
-      "arguments": null,
+      "arguments": [
+        "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
+      ],
       "transaction": {
         "type": "0x00",
         "from": "0x9775137314fe595c943712b0b336327dfa80ae8a",
