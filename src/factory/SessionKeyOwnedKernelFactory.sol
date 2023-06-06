@@ -16,12 +16,21 @@ contract SessionKeyOwnedKernelFactory {
     }
 
     function createAccount(address _owner, uint256 _index) external returns (EIP1967Proxy proxy) {
-        bytes memory data = abi.encodePacked(_owner);
+        bytes memory data = _getOwnerData(_owner);
+
         proxy = singletonFactory.createAccount(validator, data, _index);
     }
 
     function getAccountAddress(address _owner, uint256 _index) public view returns (address) {
-        bytes memory data = abi.encodePacked(_owner);
+        bytes memory data = _getOwnerData(_owner);
         return singletonFactory.getAccountAddress(validator, data, _index);
+    }
+
+    function _getOwnerData(address _owner) internal pure returns (bytes memory data) {
+        // the owner is treated as a session key that lasts forever
+        uint48 validUntil = type(uint48).max;
+        uint48 validAfter = 0;
+
+        data = abi.encodePacked(_owner, validUntil, validAfter);
     }
 }
