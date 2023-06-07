@@ -51,12 +51,11 @@ contract SessionKeyOwnedValidator is IKernelValidator {
         validationData = packValidationData(sessionKey.validAfter, sessionKey.validUntil);
     }
 
-    function validateSignature(bytes32 hash, bytes calldata signature) public view override returns (ValidationData) {
-        bytes32 ethhash = ECDSA.toEthSignedMessageHash(hash);
-        address recovered = ECDSA.recover(ethhash, signature);
+    function validateSignature(bytes32 hash, bytes calldata signature) public view override returns (uint256) {
+        address recovered = ECDSA.recover(hash, signature);
 
         SessionKeyStorage storage sessionKey = sessionKeyStorage[recovered][msg.sender];
-        if (ValidUntil.unwrap(sessionKey.validUntil) == 0) {
+        if (sessionKey.validUntil == 0) {
             // we do not allow validUntil == 0 here
             return SIG_VALIDATION_FAILED;
         }
