@@ -40,20 +40,30 @@ contract SessionKeyOwnedValidator is IKernelValidator {
         address recovered = ECDSA.recover(hash, _userOp.signature);
 
         SessionKeyStorage storage sessionKey = sessionKeyStorage[recovered][msg.sender];
-        if (sessionKey.validUntil == 0 ) { // we do not allow validUntil == 0 here
+        if (sessionKey.validUntil == 0) {
+            // we do not allow validUntil == 0 for session keys
             return SIG_VALIDATION_FAILED;
         }
         return _packValidationData(false, sessionKey.validUntil, sessionKey.validAfter);
     }
 
     function validateSignature(bytes32 hash, bytes calldata signature) public view override returns (uint256) {
-        bytes32 ethhash = ECDSA.toEthSignedMessageHash(hash);
-        address recovered = ECDSA.recover(ethhash, signature);
+        address recovered = ECDSA.recover(hash, signature);
 
         SessionKeyStorage storage sessionKey = sessionKeyStorage[recovered][msg.sender];
-        if (sessionKey.validUntil == 0 ) { // we do not allow validUntil == 0 here
-            return SIG_VALIDATION_FAILED;
+        if (sessionKey.validUntil != 0) {
+            // we do not allow validUntil == 0 for session keys
+            return _packValidationData(false, sessionKey.validUntil, sessionKey.validAfter);
         }
-        return _packValidationData(false, sessionKey.validUntil, sessionKey.validAfter);
+
+        hash = ECDSA.toEthSignedMessageHash(hash);
+        recovered = ECDSA.recover(hash, signature);
+        sessionKey = sessionKeyStorage[recovered][msg.sender];
+        // we do not allow validUntil == 0 for session keys
+        if (sessionKey.validUntil != 0) {
+            return _packValidationData(false, sessionKey.validUntil, sessionKey.validAfter);
+        }
+
+        return SIG_VALIDATION_FAILED;
     }
 }
