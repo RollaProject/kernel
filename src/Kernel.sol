@@ -41,7 +41,7 @@ contract Kernel is EIP712, Compatibility, KernelStorage {
         }
         assembly {
             calldatacopy(0, 0, calldatasize())
-            let result := delegatecall(gas(), facet, 0, calldatasize(), 0, 0)
+            let result := delegatecall(gas(), executor, 0, calldatasize(), 0, 0)
             returndatacopy(0, 0, returndatasize())
             switch result
             case 0 { revert(0, returndatasize()) }
@@ -207,7 +207,7 @@ contract Kernel is EIP712, Compatibility, KernelStorage {
             validator.enable(enableData);
         }
     }
-    
+
     /// @notice Checks if a signature is valid
     /// @dev This function checks if a signature is valid based on the hash of the data signed.
     /// @param hash The hash of the data that was signed
