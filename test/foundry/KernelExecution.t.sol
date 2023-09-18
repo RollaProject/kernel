@@ -29,7 +29,8 @@ contract KernelExecutionTest is KernelTestBase {
         vm.warp(1000);
         bytes memory empty;
         UserOperation memory op = entryPoint.fillUserOp(
-            address(kernel), abi.encodeWithSelector(KernelStorage.disableMode.selector, bytes4(0x00000001), address(0), empty)
+            address(kernel),
+            abi.encodeWithSelector(KernelStorage.disableMode.selector, bytes4(0x00000001), address(0), empty)
         );
         op.signature = abi.encodePacked(bytes4(0x00000000), entryPoint.signUserOpHash(vm, ownerKey, op));
         UserOperation[] memory ops = new UserOperation[](1);
@@ -160,25 +161,22 @@ contract KernelExecutionTest is KernelTestBase {
             );
             (uint8 v, bytes32 r, bytes32 s) = vm.sign(ownerKey, digest);
 
-        op.signature = abi.encodePacked(
-            bytes4(0x00000002),
-            uint48(0),
-            uint48(0),
-            address(sessionKeyValidator),
-            address(action),
-            uint256(enableData.length),
-            enableData,
-            uint256(65),
-            r,
-            s,
-            v
-        );
+            op.signature = abi.encodePacked(
+                bytes4(0x00000002),
+                uint48(0),
+                uint48(0),
+                address(sessionKeyValidator),
+                address(action),
+                uint256(enableData.length),
+                enableData,
+                uint256(65),
+                r,
+                s,
+                v
+            );
         }
 
-        op.signature = bytes.concat(
-            op.signature,
-            entryPoint.signUserOpHash(vm, sessionKeyPriv, op)
-        );
+        op.signature = bytes.concat(op.signature, entryPoint.signUserOpHash(vm, sessionKeyPriv, op));
 
         UserOperation[] memory ops = new UserOperation[](1);
         ops[0] = op;

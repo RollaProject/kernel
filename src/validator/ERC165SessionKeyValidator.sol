@@ -9,7 +9,7 @@ import "src/common/Types.sol";
 
 // idea, we can make this merkle root
 struct ERC165SessionKeyStorage {
-    address key;
+    bool enabled;
     bytes4 selector;
     bytes4 interfaceId;
     ValidAfter validAfter;
@@ -18,7 +18,7 @@ struct ERC165SessionKeyStorage {
 }
 
 contract ERC165SessionKeyValidator is IKernelValidator {
-    mapping(address => ERC165SessionKeyStorage) public sessionKeys;
+    mapping(address sessionKey => mapping(address kernel => ERC165SessionKeyStorage)) public sessionKeys;
 
     function enable(bytes calldata _data) external payable {
         address sessionKey = address(bytes20(_data[0:20]));
@@ -48,12 +48,12 @@ contract ERC165SessionKeyValidator is IKernelValidator {
     {
         bytes32 hash = ECDSA.toEthSignedMessageHash(_userOpHash);
         address recovered = ECDSA.recover(hash, _userOp.signature);
-        ERC165SessionKeyStorage storage sessionKey = sessionKeys[_userOp.sender];
-        if (recovered != sessionKey.key) {
+        ERC165SessionKeyStorage storage sessionKey = sessionKeys[recovered][_userOp.sender];
+        if (!sessionKey.enabled) {
             return SIG_VALIDATION_FAILED;
         }
         require(bytes4(_userOp.callData[0:4]) == sessionKey.selector, "not supported selector");
-        address token = address(bytes20(_userOp.callData[sessionKey.addressOffset:sessionKey.addressOffset+20]));
+        address token = address(bytes20(_userOp.callData[sessionKey.addressOffset:sessionKey.addressOffset + 20]));
         require(IERC165(token).supportsInterface(sessionKey.interfaceId), "does not support interface");
         return packValidationData(sessionKey.validAfter, sessionKey.validUntil);
     }
